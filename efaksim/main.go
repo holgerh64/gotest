@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 //
-// Simmulation des Vokabellernes mit 5 Föchern
+// Simulation des Vokabellernes mit 5 Föchern
 // Dabei wird der Lernerfolg jeder einzelner Vokabel mit dem E-Wert bewertet,
 //
 // -----------------------------------------------------------------------------
@@ -15,7 +15,7 @@
 // Fächerzuordnung:
 //
 // Modellierung des Lernerfolgs:
-// Lernquote
+// # Lernquote
 //
 // # Vergessensquote
 //
@@ -29,6 +29,7 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
 	"strconv"
 )
 
@@ -62,11 +63,15 @@ func main() {
 	var v1 [100]Vokabel
 	var x int
 
+	// Zufallszahlengenerator initialisieren.
+	// Konstante erzeugt stets gleiche Reihen von Zufalsszahlen
+	rand.Seed(1) // KOnstante durch Systemzeit ersetzen für stets "neue" Zahlen
+
 	fmt.Println("Hallo Welt")
 	//prtVok(v1)
 
 	for x = 0; x < 100; x++ {
-		iniVok(&v1[x], 1.73, x+1)
+		iniVok(&v1[x], 2.5, x+1)
 	}
 	for x = 0; x < 100; x++ {
 		prtVok(&v1[x])
@@ -74,15 +79,29 @@ func main() {
 
 }
 
+// Eine Struktur vom Type Vokabel initialisieren
 func iniVok(vt *Vokabel, et float64, vnr int) {
 	vt.AnzF = 0
 	vt.AnzR = 0
-	vt.E = et
+	vt.E = zZahl(1.0, et)
 	vt.Voknr = vnr
 	vt.InFach = 5
 
 }
+
+// Testfunktion zur Ausgabe von Werten aus Strukt Vokabel
 func prtVok(vt *Vokabel) {
 	fmt.Println("Vokabelnummer: " + strconv.Itoa(vt.Voknr))
-	fmt.Println(&vt)
+	fmt.Println(vt.E)
+}
+
+// Gibt eine Zufallsazhl im Bereich min bis max aus
+func zZahl(min float64, max float64) float64 {
+	var tmp float64
+
+	tmp = 0.0
+
+	tmp = rand.Float64()*(max-min) + min
+
+	return tmp
 }
