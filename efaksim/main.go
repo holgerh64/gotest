@@ -29,8 +29,8 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"math/rand"
-	"strconv"
 )
 
 //-----------------------------------------------
@@ -42,7 +42,7 @@ import (
 
 // Die Struktur Vokabel
 type Vokabel struct {
-	Voknr  int     // Vokabeltext durch laufebde Bummer abgebildet
+	Voknr  int     // Vokabeltext durch laufende Nummer abgebildet
 	InFach int     // Fach in dem sich die Vokabel befindet
 	E      float64 // Der sagenhafte E-Faktor
 	AnzR   int     // Anzahl der Abfragen mit korrerktem Ergebnis
@@ -54,29 +54,46 @@ type Vokabel struct {
 
 }
 
+// Struktur, die Statistiken zur Vokabelliste enthält
+type VokStat struct {
+	vokanz int     // Anzahl der Vokabeln in der Liste
+	minE   float64 // Minimaler E-Wert
+	meanE  float64 // Mittlerer E-Wert
+	maxE   float64 // Maximaler E-Wert
+}
+
 // Implementierung der Setter Methoden
 
 // Implementierung der getter Methoden
 
 // Der Einsprungpunkt
 func main() {
-	var v1 [100]Vokabel
+	var numVok int
 	var x int
+	numVok = 100 // Anzahl der Vokabeln in der Liste
+
+	var v1 []Vokabel // Slice für die Vokabeln vorbereiten
+	var vs VokStat
 
 	// Zufallszahlengenerator initialisieren.
 	// Konstante erzeugt stets gleiche Reihen von Zufalsszahlen
-	rand.Seed(1) // KOnstante durch Systemzeit ersetzen für stets "neue" Zahlen
+	rand.Seed(1) // Konstante durch Systemzeit ersetzen für stets "neue" Zahlen
 
-	fmt.Println("Hallo Welt")
-	//prtVok(v1)
+	// Speicherplatz für die Vokabelliste beschaffen
+	v1 = make([]Vokabel, numVok)
 
-	for x = 0; x < 100; x++ {
+	for x = 0; x < len(v1); x++ {
 		iniVok(&v1[x], 2.5, x+1)
 	}
-	for x = 0; x < 100; x++ {
+
+	for x = 0; x < len(v1); x++ {
 		prtVok(&v1[x])
 	}
 
+	vs = calcVokStat(v1)
+	fmt.Println("E Stats:\nEmin, Emean, Emax")
+	fmt.Println(vs.minE, vs.meanE, vs.maxE)
+	fmt.Println("Vokanz=", vs.vokanz)
 }
 
 // Eine Struktur vom Type Vokabel initialisieren
@@ -89,9 +106,37 @@ func iniVok(vt *Vokabel, et float64, vnr int) {
 
 }
 
+// Berechnet elementare Statistiken der Vokabelliste
+func calcVokStat(vt []Vokabel) VokStat {
+	var tStat VokStat
+	var x int
+	var tEmin, tEmean, tEmax float64
+
+	tEmin = math.MaxFloat64
+	tEmax = 0.0
+	tEmean = 0.0
+
+	for x = 0; x < len(vt); x++ {
+		if vt[x].E < tEmin {
+			tEmin = vt[x].E
+		}
+		if vt[x].E > tEmax {
+			tEmax = vt[x].E
+		}
+
+		tEmean += vt[x].E
+	}
+	tEmean = tEmean / float64(len(vt))
+	tStat.minE = tEmin
+	tStat.maxE = tEmax
+	tStat.meanE = tEmean
+	tStat.vokanz = len(vt)
+	return tStat
+}
+
 // Testfunktion zur Ausgabe von Werten aus Strukt Vokabel
 func prtVok(vt *Vokabel) {
-	fmt.Println("Vokabelnummer: " + strconv.Itoa(vt.Voknr))
+	fmt.Println("Vokabelnummer: ", vt.Voknr)
 	fmt.Println(vt.E)
 }
 
