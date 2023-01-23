@@ -99,7 +99,7 @@ func ZZahl(min float64, max float64) float64 {
 func IniVok(vt *Vokabel, et float64, vnr int) {
 	vt.AnzF = 0
 	vt.AnzR = 0
-	vt.E = ZZahl(1.0, et)
+	vt.E = et
 	vt.Voknr = vnr
 	vt.InFach = 5
 
@@ -114,6 +114,7 @@ and involving the calculation of easiness factors for particular items:
 2 - With all items associate an E-Factor equal to 2.5.
 
 3 - Repeat items using the following intervals:
+
 	I(1):=1
 	I(2):=6
 	for n>2: I(n):=I(n-1)*EF
@@ -123,6 +124,7 @@ and involving the calculation of easiness factors for particular items:
 	If interval is a fraction, round it up to the nearest integer.
 
 4 - After each repetition assess the quality of repetition response in 0-5 grade scale:
+
 	5 – perfect response
 	4 – correct response after a hesitation
 	3 – correct response recalled with serious difficulty
@@ -131,6 +133,7 @@ and involving the calculation of easiness factors for particular items:
 	0 – complete blackout.
 
 5 - After each repetition modify the E-Factor of the recently repeated item according to the formula:
+
 	EF’:=EF+(0.1-(5-q)*(0.08+(5-q)*0.02))
 	where:
 	EF’ – new value of the E-Factor,
@@ -139,10 +142,12 @@ and involving the calculation of easiness factors for particular items:
 	If EF is less than 1.3 then let EF be 1.3.
 
 6 - If the quality response was lower than 3 then start repetitions for the item from the
+
 	beginning without changing the E-Factor (i.e. use intervals I(1), I(2) etc. as if the
 	item was memorized anew).
 
 7 - After each repetition session of a given day repeat again all items that scored below
+
 	four in the quality assessment. Continue the repetitions until all of these items score
 	at least four.
 
@@ -154,3 +159,13 @@ This means that E-Factors did not change significantly after that period and it 
 to presume that E-Factors correspond roughly to the real factor by which the inter-repetition
 intervals should increase in successive repetitions.
 */
+func CalcEVal(vt *Vokabel, q int) float64 {
+	var oldE, newE float64
+
+	oldE = vt.E
+	newE = oldE + (0.1 - float64(5-q)*(0.08+float64(5-q)*0.02))
+	if newE < 1.3 {
+		newE = 1.3
+	}
+	return newE
+}
