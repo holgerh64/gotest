@@ -14,14 +14,13 @@ package main
 import (
 	"fmt"
 	"math/rand"
-	"time"
 )
 
 func main() {
 	var anz int
 
 	// Zufallszahlengenerator initialisieren
-	rand.Seed(time.Now().UnixNano())
+	// rand.Seed(time.Now().UnixNano())
 
 	fmt.Print("Länge der Liste:")
 	_, _ = fmt.Scanf("%d", &anz)
@@ -31,14 +30,12 @@ func main() {
 	}
 	for x := 0; x < anz; x++ {
 		lst[fndpos(lst, rand.Intn(anz-1))] = x
-		//fmt.Println("lst[", x, "]=", lst[x])
 	}
 	for x := 0; x < anz; x++ {
 		fmt.Println("lst[", x, "]=", lst[x])
 	}
 
-	fmt.Println("Länge der Liste:", fndpos(lst, 0))
-
+	fmt.Println("Länge der Liste:", len(lst))
 }
 
 // Finde die nächste freie Position x mit lst[x] =-1
@@ -52,6 +49,7 @@ func fndpos(plst []int, sd int) int {
 	pos = sd
 	for x = 0; x < anz; x++ {
 		if plst[pos] == -1 {
+
 			return pos
 		}
 		if pos == anz-1 {
@@ -61,5 +59,4 @@ func fndpos(plst []int, sd int) int {
 		}
 	}
 	panic("No Position: Stop")
-
 }
