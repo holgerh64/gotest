@@ -22,6 +22,8 @@
 package UserReaction
 
 import (
+	// "fmt"
+	
 	"math"
 
 	"github.com/holgerh64/gotest/efaksim/efaktor"
@@ -43,7 +45,7 @@ func VErgUser(vt *efaktor.Vokabel) int {
 	anzR = vt.AnzR
 	anzF = vt.AnzF
 	oldE = vt.E
-	ekorr = 2.5-(oldE/1.2 - 1.083333333333333)
+	ekorr = oldE/1.2 - 1.083333333333333
 	rawresp = math.Log10(9.0*efaktor.ZZahl(0.0, 1.0) + 1.0)
 
 	switch {
@@ -58,25 +60,25 @@ func VErgUser(vt *efaktor.Vokabel) int {
 	geskorr := (ekorr + anzkorr+ rawresp)/3.0
 
 	switch {
-	case geskorr >= 0.9:
+	case geskorr >= 0.6:
 		erg = 5
 	// break
-	case geskorr >= 0.8 && geskorr <0.9:
+	case geskorr >= 0.5:
 		erg = 4
 		// break
-	case geskorr >= 0.6&& geskorr<0.8 :
+	case geskorr >= 0.4:
 		erg = 3
 		// break
-	case geskorr >= 0.4&& geskorr<0.6:
+	case geskorr >= 0.3:
 		erg = 2
 		// break
-	case geskorr > 0.3&&geskorr<0.4:
+	case geskorr > 0.2:
 		erg = 1
 		// break
 	default:
 		erg = 0
 	}
-
+		// fmt.Println("geskorr=", geskorr, "; erg=", erg)
 	// Der Algoithmus
 	// Lernrate
 	// lerr := 0.1
